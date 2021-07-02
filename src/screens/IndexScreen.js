@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, StyleSheet, Text, FlatList, Button, TouchableOpacity } from 'react-native';
 import { Context } from '../context/BlogContext';
 import { Feather } from '@expo/vector-icons'; 
@@ -6,7 +6,19 @@ import { interpolateNode } from 'react-native-reanimated';
 import { NavigationEvents } from 'react-navigation';
 
 const IndexScreen = ({navigation}) => {
-    const { state, deleteBlogPost } = useContext(Context);
+    const { state, deleteBlogPost, getBlogPosts } = useContext(Context);
+    
+    useEffect(() => {
+        getBlogPosts();
+        navigation.addListener('didFocus', () => {
+            getBlogPosts();
+        });
+
+        return () => {
+            listener.remove();
+        };
+    }, [])
+
     return (
         <View>
             <FlatList
